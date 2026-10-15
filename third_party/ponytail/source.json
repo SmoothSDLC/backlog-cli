@@ -1,0 +1,15 @@
+{
+  "source": "https://github.com/DietrichGebert/ponytail",
+  "version": "5.2.0",
+  "local_source": "/home/smooth/.claude/plugins/synced/86738761-6701-42b4-8c7b-00251c90cf07_1ad50f84-d021-4628-86ae-ebeb507b37b6/ponytail",
+  "license": "MIT",
+  "files": {
+    ".agents/skills/plugin.json": "b1db7be1404a84ebf992a2fb7a5a9296adb17b0fc63a14856e2028f0d1d16051",
+    ".agents/skills/ponytail/SKILL.md": "914ac5b4cb7a703f16d44bddc93effef7ca1fcaa9191cf28642f1632b1771623",
+    ".agents/skills/ponytail-audit/SKILL.md": "67ce5c9d5c39412d941a49560c15659f539964f5da05b383790df7fe2ca81c21",
+    ".agents/skills/ponytail-debt/SKILL.md": "e1f163985c9ba12d8fe137a0738fead5943c5d529fafec9afb4af915d0291b61",
+    ".agents/skills/ponytail-gain/SKILL.md": "33e8d371003bd2c8ddcca90785571d915d2360a585291054f7613ccf29db7bea",
+    ".agents/skills/ponytail-help/SKILL.md": "132407e1845f8443b3aa85439d48bd3d71a6bb9d4ea86c7d8e9a077bb303e38a",
+    ".agents/skills/ponytail-review/SKILL.md": "37b3ea14b82c0ea8b5bf71d359187c1ade84b81241d3126eb46ff0064f835a9e"
+  }
+}

@@ -1,0 +1,31 @@
+backlog-cli
+Copyright 2026 SmoothSDLC Systems Inc
+https://SmoothSDLC.com
+
+Original backlog-cli code and repository integration files are licensed under
+the Apache License, Version 2.0. See LICENSE.
+
+This repository includes third-party development skills and documentation:
+
+Superpowers 6.4.2
+Copyright (c) 2025 Jesse Vincent. MIT License.
+https://github.com/obra/superpowers
+License: third_party/superpowers/LICENSE
+
+Ponytail 5.2.0
+Copyright and MIT License: third_party/ponytail/LICENSE
+https://github.com/DietrichGebert/ponytail
+
+codebase-memory-mcp 0.11.0
+Copyright (c) 2025 DeusData. MIT License.
+https://github.com/DeusData/codebase-memory-mcp
+License: third_party/codebase-memory-mcp/LICENSE
+
+Skills retain their original upstream license terms. Their source manifests
+identify every imported skill file and its SHA-256 digest. The Apache license
+does not replace these third-party licenses.
+
+Skill-authoring guidance and validation scripts were copied from
+SmoothSDLC/corp_smoothsdlc_ai_coding_model, commit
+bbd807863a77a8f3a5cb37f6cd42309b6132810d. See docs/skill-authoring-for-codex.md
+for repository-specific application of that guidance.
