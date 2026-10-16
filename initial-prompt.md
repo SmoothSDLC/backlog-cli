@@ -70,24 +70,142 @@ Status: proposal for review. The original prompt above is preserved. The rules
 below make implied behavior explicit and propose resolutions to contradictions;
 they are not an implementation plan or authorization to implement the CLI.
 Unambiguous original requirements remain in scope. **Proposed** resolutions are
-recommendations, not previously agreed product decisions. The final section
-identifies choices that still need confirmation.
+recommendations, not previously agreed product decisions. Use the numbered
+decision list below to accept or change them individually.
 
 ## Gaps and proposed resolutions
 
-| Gap | Proposed resolution |
-| --- | --- |
-| Default list filter uses OR and therefore includes every state | Use `state != done AND state != archived`. |
-| Both `set <id>` and `<id> set` appear | Use `backlog set <id> ...` consistently. |
-| `set` on a list appends, duplicating `add` | Make `set` replace and `add` append/prepend; this deliberately changes the original list example. |
-| Nested-list reorder omits the property and index convention | Name the list property and use zero-based indexes. |
-| Branch scope is missing for most commands | Current branch for views/bulk actions; explicit IDs address unarchived items repository-wide. |
-| Priority and completed-item behavior are unclear | Only active items have scheduling priority; normalize after mutations. |
-| Reading the first manifest ID can reuse an archived ID | Persist a next-ID counter covering both live and archived items. |
-| `_` conflicts with typed fields | Use `_` for missing free text, typed defaults for everything else. |
-| Force, interrupted writes, and file collisions are undefined | Preserve unrelated files and fail clearly on incompatible data or ownership conflicts. |
-| Update conflates package, source checkout, and generated files | Update the installed package and eligible generated integrations, never Git source. |
-| Package feed, supported agents, and runtime compatibility are unspecified | Make these explicit release decisions rather than infer them. |
+Reply with selections such as `1a, 2b, 3a`; custom answers can use the same
+number, for example `3: keep append, add a replace command`. Each number is an
+independent decision. No option is accepted until selected. The detailed sections
+that follow describe the current proposal, not an additional set of decisions;
+selected options will take precedence when that text is revised.
+
+1. **Default list filter:** the original OR condition includes every state.
+   - **1a:** Show only new/in-progress items by default (exclude done AND archived).
+   - **1b:** Show all unarchived items, including done, by default.
+
+2. **Command order:** both `set <id>` and `<id> set` appear in examples.
+   - **2a:** Support only `backlog set <id> ...`.
+   - **2b:** Support both orders as equivalent aliases.
+
+3. **List assignment:** `set` appends in the original, overlapping with `add`.
+   - **3a:** `set` replaces a whole list; `add` appends/prepends entries.
+   - **3b:** Preserve append behavior for `set` and `add`; add an explicit `replace` operation.
+
+4. **Nested-list reorder syntax:** the original omits which property to reorder.
+   - **4a:** Use `backlog set <id> <property> item <n> priority <N>`.
+   - **4b:** Use a dedicated `backlog move <id> <property> <n> <N>` command.
+
+5. **List entry indexes:** the starting index is unspecified.
+   - **5a:** Zero-based indexes, matching JSON arrays.
+   - **5b:** One-based indexes for human-facing commands; JSON arrays remain conventional.
+
+6. **List and bulk-operation branch scope:** defaults are unspecified.
+   - **6a:** Current branch only; no branch-selection flags initially.
+   - **6b:** Current branch by default, with `--branch <name>` and `--all-branches` for list/bulk archive.
+
+7. **Explicit-ID access:** an ID may refer to another branch.
+   - **7a:** Permit explicit-ID operations across branches within the repository.
+   - **7b:** Reject other-branch IDs unless `--branch <name>` explicitly selects that branch.
+
+8. **Completed-item priority:** priority handling after completion is unspecified.
+   - **8a:** Only new/in-progress items have priority; done/archived priority is null.
+   - **8b:** Keep done items in branch priority ordering; only archived items lose priority. The next-item command skips done items.
+
+9. **New/reopened item position:** the original priority default implies insertion at 0 but reopening is unspecified.
+   - **9a:** Insert both new and reopened items at priority 0.
+   - **9b:** New items default to 0; reopened items go to the bottom unless repositioned.
+
+10. **Creation payload:** CSV field order and list representation are missing.
+    - **10a:** JSON object or CSV `description,ac,item-state-description,work_item_id`; lists use JSON or `add`.
+    - **10b:** JSON object or named flags (`--description`, `--ac`, etc.); remove positional CSV creation input.
+
+11. **Typed defaults:** `_` is not valid for integer, enum, date, or array fields.
+    - **11a:** `_` only for missing free text; typed fields receive documented defaults.
+    - **11b:** Require name/description/acceptance criteria; use typed defaults elsewhere and `_` only for optional text.
+
+12. **Interactive creation:** prompting for lists and typed fields is unspecified.
+    - **12a:** Prompt for omitted free text/list entries; accept typed defaults without prompting.
+    - **12b:** Also prompt for editable typed fields such as state/priority; never prompt for generated ID, dates, or branch.
+
+13. **JSON shape:** “returns data as json objects” does not define the interface.
+    - **13a:** Always emit an envelope with `ok` and `data` or `error`.
+    - **13b:** Emit raw item objects/arrays for success and a documented error object for failure.
+
+14. **ID allocation:** the first manifest entry cannot prevent reuse after archiving.
+    - **14a:** Keep a persistent next-ID counter and validate against both files.
+    - **14b:** Allocate `max(manifest IDs, archive IDs) + 1` each time, without a counter.
+    Both options require concurrency protection and reject duplicate IDs.
+
+15. **Force adoption:** ownership checks exist, but `--force` consequences do not.
+    - **15a:** Adopt compatible data only; fail on conflicting files and preserve unrelated files.
+    - **15b:** Back up conflicting files before replacing generated files; still reject invalid backlog data and preserve unrelated files.
+
+16. **Repeated init and generated-file collisions:** refresh behavior is unspecified.
+    - **16a:** Refresh recognized, unmodified generated copies; preserve/report user edits.
+    - **16b:** Repeated init only fills missing files; use a separate explicit refresh action for existing integrations.
+
+17. **Detached HEAD:** there is no current branch name to assign.
+    - **17a:** Reject repository commands until a named branch is checked out.
+    - **17b:** Allow reads with an explicit `--branch`; reject writes until on a named branch.
+
+18. **Repository/default-branch detection:** fallback behavior is unspecified.
+    - **18a:** Configured name, origin basename, then directory basename; record unknown default branch when local `origin/HEAD` is absent.
+    - **18b:** Use the same name fallback, but require an explicit default-branch setting when local detection fails.
+
+19. **Archive recovery:** moving items is specified, restoring them is not.
+    - **19a:** Archived items are read-only; no restoration command in initial scope.
+    - **19b:** Include `backlog unarchive <id>` to restore as new on the current branch at priority 0.
+
+20. **Branch import selection:** “items” may include completed work.
+    - **20a:** Move all unarchived source items, including done; leave archives unchanged.
+    - **20b:** Move active source items only; done and archived items remain assigned to the source.
+
+21. **Branch rename/deletion:** stored item assignments may outlive Git branches.
+    - **21a:** Keep stored names unchanged; use import to move remaining items.
+    - **21b:** Also provide an explicit backlog branch-rename command; never infer Git renames automatically.
+
+22. **Distribution registry/package identity:** GitHub Packages needs a scoped npm name.
+    - **22a:** GitHub Packages with a confirmed scoped name (candidate `@smoothsdlc/backlog-cli`); executable stays `backlog`.
+    - **22b:** Public npm registry with `backlog-cli` if available; executable stays `backlog`.
+    Confirm name availability/ownership separately; neither option establishes it.
+
+23. **Source repository mismatch:** the prompt names `SmoothSDLC/backup-cli` once.
+    - **23a:** Correct it to `SmoothSDLC/backlog-cli`, the current repository.
+    - **23b:** Keep `SmoothSDLC/backup-cli` as an intentional separate release source; explain the relationship.
+
+24. **Consumer runtime/platform support:** development Node 24 does not define compatibility.
+    - **24a:** Node 24+ on Linux, macOS, and Windows.
+    - **24b:** Node 24+ on Linux initially; other platforms are outside initial support.
+    Either selection is a compatibility target requiring later validation.
+
+25. **Supported agents:** “most common” does not identify adapters or destination formats.
+    - **25a:** Codex only initially, using repository `.agents/skills/` destinations.
+    - **25b:** Codex, Claude Code, and GitHub Copilot initially; specify and verify each adapter's destination/format before implementation.
+
+26. **Update scope:** “update the version and the local repo” is ambiguous.
+    - **26a:** Update the installed package and eligible generated backlog integrations; never pull Git source.
+    - **26b:** Update the package only; integration refresh remains an explicit separate action.
+
+27. **Update policy storage:** its scope and reversal are unspecified.
+    - **27a:** Repository-scoped preferences, default off, with `backlog update off` to disable.
+    - **27b:** User-scoped preferences outside the repo, default off, with the same disable command.
+
+28. **Activation-time check frequency:** enabling checks does not define frequency.
+    - **28a:** At most one successful check per 24 hours per repository.
+    - **28b:** Check on every backlog skill activation when enabled.
+    Both options warn and continue backlog work if automatic checks fail.
+
+29. **Package installation/update method:** local and global installs need different behavior.
+    - **29a:** Manage npm global installs automatically; print exact instructions for other installation methods.
+    - **29b:** Manage both npm global and repository-local installs when identifiable; print instructions for other methods.
+    Neither option elevates privileges or silently changes installation scope.
+
+30. **Automatic upgrades and schema changes:** compatibility boundaries are missing.
+    - **30a:** Automatically apply compatible stable patch/minor releases; require explicit action for majors or migrations.
+    - **30b:** Automatically apply any stable release that declares compatibility with current data; require explicit action for migrations.
+    Both options preserve a usable installation on failure and prohibit implicit downgrade.
 
 All behavioral details below are **proposed**, except where they repeat an
 unambiguous requirement above.
@@ -288,21 +406,15 @@ delete, general branch-edit, or cross-repository import command is included.
 
 ## Open decisions for product review
 
-1. Confirm the proposed resolutions that change or complete the original syntax:
-   `set` replaces lists, named-list reorder with zero-based indexes, JSON/CSV
-   creation format, active-only priorities, new items at priority 0, and explicit
-   IDs addressing any branch. These are recommendations, not settled requirements.
-2. Choose the exact scoped package name, registry owner, stable release channel,
-   minimum Node version, supported operating systems, and supported installation
-   and update methods. Development Node 24 does not establish consumer support.
-3. Name the initially supported agents and exact detection/destination formats.
-   “Most common vendor folders” is not a testable compatibility requirement.
-4. Confirm repository-scoped update policy, the added `update off` command, and
-   the 24-hour interval. Specify which agents support activation-time checks and
-   automatic updates; adapters must disclose unsupported behavior.
-5. Decide whether users need all-branch listing or explicit branch selection.
-   This proposal retains current-branch lists and branch-name/count discovery;
-   it adds no branch selection flags.
+Use decisions 1–30 above; there is no separate numbering scheme here. Supply
+custom names, paths, or behaviors beside any selection that needs them. In
+particular, package ownership/name availability (22), the release source (23),
+agent destinations and activation capabilities (25), and supported install
+locations (29) need confirmation before they become release requirements.
+
+The detailed proposal remains provisional until those selections are applied.
+Selecting one decision does not approve another decision or authorize product
+implementation.
 
 No libraries, engineering task breakdown, implementation sequence, or product
 code are proposed by this amendment.
