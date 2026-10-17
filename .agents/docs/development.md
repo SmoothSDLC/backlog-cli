@@ -24,6 +24,9 @@ published packages and exercises the installed CLI independently of source code.
 CI runs on branch pushes except `master`, and on pull requests except those targeting
 `master`. Tag pushes do not start a separate CI run. Publishing starts only on a
 push to `main`, after the pull request is merged, and reruns the reusable CI gate.
+Release workflows run one at a time with `queue: max`, so new pushes do not replace
+pending releases. GitHub allows up to 100 pending runs in this queue; additional
+runs are canceled when that limit is reached.
 
 Release PRs bump package.json and package-lock.json together. The main workflow
 publishes that exact stable version, verifies registry installations and upgrades,
