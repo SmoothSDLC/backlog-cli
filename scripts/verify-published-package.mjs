@@ -11,7 +11,7 @@ const exec = promisify(execFile);
 const packageName = '@smoothsdlc/smooth-backlog-cli';
 const registry = 'https://npm.pkg.github.com';
 
-export async function verifyInstalled({ prefix, expectedVersion }) {
+export async function verifyInstalled({ prefix, expectedVersion, verifyRegistry = false }) {
   const work = await fs.mkdtemp(join(tmpdir(), 'backlog-release-check-'));
   try {
     const modules = await runNpm(['root', '--global', '--prefix', prefix]);
@@ -61,6 +61,11 @@ export async function verifyInstalled({ prefix, expectedVersion }) {
     assert.equal((await cli('list', 'branch')).find(x => x.branch === 'main').total, 3);
     const backup = await cli('init', 'backup'); await fs.access(join(backup.backup, 'backlog_manifest.json'));
     assert.equal((await cli('list')).length, 2);
+    if (verifyRegistry) {
+      const check = await cli('update', 'check'); assert.match(check.latest, /^\d+\.\d+\.\d+$/);
+      // Verify auto-enable for this real custom-prefix installation without upgrading an older artifact.
+      if (check.latest === expectedVersion) await cli('update', 'auto');
+    }
     await cli('update', 'disable'); await cli('update', 'off');
     for (const vendor of ['.agents', '.claude', '.github', '.qwen']) {
       const skill = join(repo, vendor, 'skills/backlog');
@@ -82,7 +87,7 @@ export async function verifyPublished(version, expectedIntegrity) {
     const integrity = JSON.parse(await runNpm(['view', spec, 'dist.integrity', '--json', '--registry', registry, '--cache', cache, '--prefer-online']));
     if (expectedIntegrity) assert.equal(integrity, expectedIntegrity, 'Published tarball integrity must match the artifact that was tested and published');
     await runNpm(['install', '--global', '--prefix', prefix, '--ignore-scripts', '--engine-strict', '--no-audit', '--no-fund', '--registry', registry, '--cache', cache, '--prefer-online', spec], { timeout: 120000 });
-    return { ...await verifyInstalled({ prefix, expectedVersion: version }), registry, integrity, source: 'GitHub Packages, fresh npm cache' };
+    return { ...await verifyInstalled({ prefix, expectedVersion: version, verifyRegistry: true }), registry, integrity, source: 'GitHub Packages, fresh npm cache' };
   } finally { await fs.rm(work, { recursive: true, force: true }); }
 }
 

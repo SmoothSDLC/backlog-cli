@@ -70,3 +70,9 @@ consumer checks run against local tarballs in the unit suite. The publishing
 workflow requires reusable multi-platform CI, publishes the packed artifact,
 and then verifies the registry artifact on Linux/macOS/Windows and Node 24/26.
 GitHub repository access has been confirmed; delivery is in progress.
+
+Remote CI found a macOS /var versus /private/var alias mismatch in custom-prefix
+recognition. A physical-parent-alias regression reproduced the failure on Linux;
+comparing physical paths on both sides fixed it. Published-package verification
+also checks actual feed lookups and auto-enable eligibility for the fresh custom
+prefix, then turns update preferences off in its isolated test configuration.

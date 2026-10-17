@@ -90,7 +90,7 @@ export function updater(options = {}) {
         if (prefix) {
           try {
             if (process.platform === 'win32') recognized = (await fs.readFile(join(prefix, 'backlog.cmd'), 'utf8')).replaceAll('\\', '/').includes('node_modules/@smoothsdlc/smooth-backlog-cli/bin/backlog.js');
-            else recognized = await fs.realpath(join(prefix, 'bin/backlog')) === join(root, 'bin/backlog.js');
+            else recognized = await fs.realpath(join(prefix, 'bin/backlog')) === await fs.realpath(join(root, 'bin/backlog.js'));
           } catch { recognized = false; }
         }
       }

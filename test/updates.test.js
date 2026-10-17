@@ -199,3 +199,12 @@ test('a complete CLI upgrade runs the new runtime and refreshes repository integ
   assert.equal(p.status, 0, p.stderr || p.stdout); assert.equal(JSON.parse(p.stdout).data[0].id, item.id);
   const version = spawnSync(process.execPath, [join(root, 'bin/backlog.js'), '--version'], { encoding: 'utf8' }); assert.equal(version.stdout.trim(), '1.0.1');
 });
+test('custom-prefix recognition compares physical paths across macOS-style parent directory aliases', { skip: process.platform === 'win32' }, async t => {
+  const { updater } = await load(); const f = fixture(t); const prefix = join(f.dir, 'physical-prefix');
+  const realRoot = join(prefix, 'lib/node_modules/@smoothsdlc/smooth-backlog-cli'); await runtimePackage(realRoot, '1.0.0');
+  await fs.mkdir(join(prefix, 'bin')); await fs.symlink(join(realRoot, 'bin/backlog.js'), join(prefix, 'bin/backlog'));
+  const alias = join(f.dir, 'prefix-alias'); await fs.symlink(prefix, alias, 'dir');
+  const root = join(alias, 'lib/node_modules/@smoothsdlc/smooth-backlog-cli');
+  const runner = async args => args[0] === 'root' ? join(f.dir, 'other/node_modules') : 'undefined';
+  await assert.rejects(updater({ packageRoot: root, configPath: join(f.dir, 'user.json'), runner, notice: () => {} }).command('auto'), e => e.code === 'REGISTRY_SETUP');
+});
