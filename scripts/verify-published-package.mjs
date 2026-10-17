@@ -11,14 +11,14 @@ const exec = promisify(execFile);
 const packageName = '@smoothsdlc/smooth-backlog-cli';
 const registry = 'https://npm.pkg.github.com';
 
-export async function verifyInstalled({ prefix, expectedVersion, verifyRegistry = false }) {
+export async function verifyInstalled({ prefix, expectedVersion, verifyRegistry = false, upgradeFrom }) {
   const work = await fs.mkdtemp(join(tmpdir(), 'backlog-release-check-'));
   try {
     const modules = await runNpm(['root', '--global', '--prefix', prefix]);
     const installed = join(modules, ...packageName.split('/'));
     const bin = join(installed, 'bin/backlog.js');
     const metadata = JSON.parse(await fs.readFile(join(installed, 'package.json'), 'utf8'));
-    assert.equal(metadata.name, packageName); assert.equal(metadata.version, expectedVersion);
+    assert.equal(metadata.name, packageName); assert.equal(metadata.version, upgradeFrom || expectedVersion);
     const shim = process.platform === 'win32' ? join(prefix, 'backlog.cmd') : join(prefix, 'bin/backlog'); await fs.access(shim);
     const repo = join(work, 'repo'), config = join(work, 'config');
     await fs.mkdir(repo); await fs.mkdir(join(config, 'smooth-backlog-cli'), { recursive: true });
@@ -36,11 +36,18 @@ export async function verifyInstalled({ prefix, expectedVersion, verifyRegistry 
       try { await exec(process.execPath, [bin, '--json', ...args], options); assert.fail('Expected command to reject invalid input'); }
       catch (error) { assert.equal(error.code, 2); assert.equal(JSON.parse(error.stdout).ok, false); commands++; }
     };
-    assert.equal((await exec(process.execPath, [bin, '--version'], options)).stdout.trim(), expectedVersion);
+    assert.equal((await exec(process.execPath, [bin, '--version'], options)).stdout.trim(), upgradeFrom || expectedVersion);
     assert.match((await exec(process.execPath, [bin, '--help'], options)).stdout, /backlog/);
     for (const vendor of ['.agents', '.claude', '.github', '.qwen']) await fs.mkdir(join(repo, vendor));
     const init = await cli('init'); assert.equal(init.installed_agents.length, 4);
     const first = await cli('new', 'First published task', '--description', 'Verify the downloaded CLI', '--ac', 'The installed commands work');
+    if (upgradeFrom) {
+      const updated = await cli('update', 'auto'); assert.equal(updated.installed, expectedVersion);
+      assert.equal((await exec(process.execPath, [bin, '--version'], options)).stdout.trim(), expectedVersion);
+      assert.equal((await cli()).id, first.id, 'A published-version upgrade must retain the permanent item identity');
+      const stored = JSON.parse(await fs.readFile(join(repo, '.backlog/config.json'), 'utf8'));
+      assert.equal(stored.generated_version, expectedVersion);
+    }
     const second = await cli('new', 'Second published task', '--description', 'Verify ordering', '--ac', 'Priorities normalize');
     assert.match(first.id, /^[0-9a-f-]{36}$/); assert.equal(second.priority, 1);
     await cli('1', 'priority', '0'); assert.equal((await cli()).id, second.id);
@@ -74,7 +81,7 @@ export async function verifyInstalled({ prefix, expectedVersion, verifyRegistry 
       await fs.access(join(skill, 'references/commands.md'));
     }
     await cli('init', 'clean'); assert.deepEqual(await cli('list'), []);
-    return { ok: true, package: packageName, version: expectedVersion, platform: process.platform, node: process.versions.node, commands, installed_agents: init.installed_agents.length };
+    return { ok: true, package: packageName, version: expectedVersion, platform: process.platform, node: process.versions.node, commands, installed_agents: init.installed_agents.length, ...(upgradeFrom ? { upgraded_from: upgradeFrom, permanent_identity_preserved: true } : {}) };
   } finally { await fs.rm(work, { recursive: true, force: true }); }
 }
 
@@ -87,7 +94,16 @@ export async function verifyPublished(version, expectedIntegrity) {
     const integrity = JSON.parse(await runNpm(['view', spec, 'dist.integrity', '--json', '--registry', registry, '--cache', cache, '--prefer-online']));
     if (expectedIntegrity) assert.equal(integrity, expectedIntegrity, 'Published tarball integrity must match the artifact that was tested and published');
     await runNpm(['install', '--global', '--prefix', prefix, '--ignore-scripts', '--engine-strict', '--no-audit', '--no-fund', '--registry', registry, '--cache', cache, '--prefer-online', spec], { timeout: 120000 });
-    return { ...await verifyInstalled({ prefix, expectedVersion: version, verifyRegistry: true }), registry, integrity, source: 'GitHub Packages, fresh npm cache' };
+    const verified = await verifyInstalled({ prefix, expectedVersion: version, verifyRegistry: true });
+    let upgrade;
+    const baseline = process.env.BACKLOG_UPGRADE_FROM;
+    if (baseline && baseline !== version) {
+      assert.match(baseline, /^\d+\.\d+\.\d+$/, 'Upgrade baseline must be an exact stable version');
+      const oldPrefix = join(work, 'upgrade-from-published-version');
+      await runNpm(['install', '--global', '--prefix', oldPrefix, '--ignore-scripts', '--engine-strict', '--no-audit', '--no-fund', '--registry', registry, '--cache', cache, `${packageName}@${baseline}`], { timeout: 120000 });
+      upgrade = await verifyInstalled({ prefix: oldPrefix, expectedVersion: version, verifyRegistry: true, upgradeFrom: baseline });
+    }
+    return { ...verified, registry, integrity, source: 'GitHub Packages, fresh npm cache', ...(upgrade ? { upgrade } : {}) };
   } finally { await fs.rm(work, { recursive: true, force: true }); }
 }
 

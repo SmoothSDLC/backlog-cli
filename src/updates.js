@@ -68,7 +68,7 @@ export function updater(options = {}) {
   const now = options.now || Date.now, version = options.version || pkg.version;
   const notice = options.notice || (message => process.stderr.write(`backlog: ${message}\n`));
   const root = resolve(options.packageRoot || packageRoot);
-  const guidance = `Configure GitHub Packages with: npm config set @smoothsdlc:registry ${registry}. Authenticate securely with npm login --scope=@smoothsdlc --registry=${registry} (read:packages); never place tokens in backlog files.`;
+  const guidance = `Configure GitHub Packages with: npm config set @smoothsdlc:registry ${registry}. Authenticate securely with npm login --scope=@smoothsdlc --auth-type=legacy --registry=${registry} (read:packages); never place tokens in backlog files.`;
   const manual = `npm install --global ${pkg.name}@latest --registry=${registry}`;
   async function load() {
     if (!await exists(path)) return { ...defaultConfig };

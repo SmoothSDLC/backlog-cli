@@ -208,3 +208,8 @@ test('custom-prefix recognition compares physical paths across macOS-style paren
   const runner = async args => args[0] === 'root' ? join(f.dir, 'other/node_modules') : 'undefined';
   await assert.rejects(updater({ packageRoot: root, configPath: join(f.dir, 'user.json'), runner, notice: () => {} }).command('auto'), e => e.code === 'REGISTRY_SETUP');
 });
+test('registry setup guidance uses the GitHub Packages legacy login flow required by npm 9+', async t => {
+  const { updater } = await load(); const f = fixture(t);
+  const u = updater({ configPath: join(f.dir, 'user.json'), runner: async () => 'undefined', notice: () => {} });
+  await assert.rejects(u.command('check'), /npm login --scope=@smoothsdlc --auth-type=legacy --registry=https:\/\/npm.pkg.github.com/);
+});

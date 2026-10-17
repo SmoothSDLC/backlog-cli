@@ -186,7 +186,7 @@ GitHub Packages needs the scoped registry configured:
 
 ```sh
 npm config set @smoothsdlc:registry https://npm.pkg.github.com
-npm login --scope=@smoothsdlc --registry=https://npm.pkg.github.com
+npm login --scope=@smoothsdlc --auth-type=legacy --registry=https://npm.pkg.github.com
 ```
 
 Use an account/token with package-read access. Public GitHub source does not

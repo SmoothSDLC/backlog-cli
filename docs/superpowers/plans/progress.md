@@ -76,3 +76,11 @@ recognition. A physical-parent-alias regression reproduced the failure on Linux;
 comparing physical paths on both sides fixed it. Published-package verification
 also checks actual feed lookups and auto-enable eligibility for the fresh custom
 prefix, then turns update preferences off in its isolated test configuration.
+
+Release 1.0.0 completed successfully in run 38990025987: all six fresh-registry
+consumer jobs passed with 29 command checks and four generated agents each.
+The recorded artifact integrity is stored in docs/releases/1.0.0-verification.json.
+A final authentication review found npm 9+ requires --auth-type=legacy for the
+GitHub Packages login command. A failing regression verified the omitted flag;
+release 1.0.1 corrects the guidance and adds real feed-based 1.0.0-to-current
+self-update verification, including GUID preservation and integration refresh.

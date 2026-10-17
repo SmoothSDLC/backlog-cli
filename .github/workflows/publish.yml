@@ -68,6 +68,7 @@ jobs:
           RELEASE_VERSION: ${{ needs.publish.outputs.version }}
           RELEASE_INTEGRITY: ${{ needs.publish.outputs.integrity }}
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BACKLOG_UPGRADE_FROM: 1.0.0
           BACKLOG_RELEASE_RESULT: ${{ runner.temp }}/backlog-published-result.json
       - uses: actions/upload-artifact@v4
         with:

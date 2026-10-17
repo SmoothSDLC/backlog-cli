@@ -13,7 +13,7 @@ package-read authentication, then install:
 
 ```sh
 npm config set @smoothsdlc:registry https://npm.pkg.github.com
-npm login --scope=@smoothsdlc --registry=https://npm.pkg.github.com
+npm login --scope=@smoothsdlc --auth-type=legacy --registry=https://npm.pkg.github.com
 npm install --global @smoothsdlc/smooth-backlog-cli
 ```
 
@@ -70,10 +70,12 @@ The release workflow runs the reusable CI matrix before publishing the exact
 packed tarball to GitHub Packages. It then installs that exact version using a
 fresh npm cache on Linux, macOS, and Windows with Node 24/26, checks the registry
 integrity against the published artifact, and exercises the downloaded CLI and
-its four generated integrations. Each platform uploads its verification result.
+its four generated integrations. It also upgrades the published 1.0.0 baseline
+through the real feed and verifies permanent item identity and skill refresh.
+Each platform uploads its verification result.
 Version tags and manual dispatch trigger releases using the repository token.
 To independently verify an accessible published version, configure package-read
-authentication and run `node scripts/verify-published-package.mjs 1.0.0`.
+authentication and run `node scripts/verify-published-package.mjs 1.0.1`.
 
 [initial-prompt.md](initial-prompt.md) preserves the initial requirements;
 [the revised specification](docs/superpowers/specs/2026-10-16-backlog-cli-design.md)
