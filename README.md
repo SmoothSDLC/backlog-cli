@@ -8,18 +8,21 @@ The npm package is **`@smoothsdlc/smooth-backlog-cli`**; its command is **`backl
 
 ## Install and use
 
-Install **1.0.1** directly from this public repository's release asset. No GitHub
-login or package-registry token is required:
+Install **`@smoothsdlc/smooth-backlog-cli`** by package name from GitHub Packages.
+Configure the scope's registry once, authenticate, and install:
 
 ```sh
-npm install --global https://github.com/SmoothSDLC/backlog-cli/releases/download/v1.0.1/smoothsdlc-smooth-backlog-cli-1.0.1.tgz
+npm config set @smoothsdlc:registry https://npm.pkg.github.com
+npm login --scope=@smoothsdlc --auth-type=legacy --registry=https://npm.pkg.github.com
+npm install --global @smoothsdlc/smooth-backlog-cli --registry=https://npm.pkg.github.com
 backlog --version
 ```
 
-The release asset is the exact tarball downloaded from GitHub Packages after
-publication, with its SHA-512 integrity verified. See the
-[latest release](https://github.com/SmoothSDLC/backlog-cli/releases/latest) for
-downloads and release notes.
+GitHub's npm registry requires authentication even for public packages. When npm
+login asks for a password, use a GitHub personal access token (classic) with
+`read:packages`. The registry setup also enables built-in update checks and
+automatic updates. For installation without GitHub login, see the
+[public release download alternative](#alternative-public-release-download).
 
 From a Git working tree:
 
@@ -96,21 +99,21 @@ auto installs, and `backlog update disable` to disable weekly notices. Settings
 are user-scoped. Automatic updates require a writable global/user-prefix install;
 repository-local dependencies receive normal npm update instructions.
 
-### GitHub Packages and updates
+### Alternative: public release download
 
-The repository and release download are public. GitHub's npm registry requires
-authentication even for public packages. To install by package name or use the
-built-in update checks and automatic updates, configure the registry:
+Install **1.0.1** from this public repository's release asset without GitHub login
+or a package-registry token:
 
 ```sh
-npm config set @smoothsdlc:registry https://npm.pkg.github.com
-npm login --scope=@smoothsdlc --auth-type=legacy --registry=https://npm.pkg.github.com
-npm install --global @smoothsdlc/smooth-backlog-cli
+npm install --global https://github.com/SmoothSDLC/backlog-cli/releases/download/v1.0.1/smoothsdlc-smooth-backlog-cli-1.0.1.tgz
 ```
 
-When npm login asks for a password, use a GitHub personal access token (classic)
-with `read:packages`. To keep installing updates from public release assets
-instead, use `backlog update disable` to turn off weekly registry checks.
+The release asset is the exact tarball downloaded from GitHub Packages after
+publication, with its SHA-512 integrity verified. See the
+[latest release](https://github.com/SmoothSDLC/backlog-cli/releases/latest) for
+downloads and release notes. Built-in updates still require the registry setup
+above. Use `backlog update disable` to turn off weekly registry checks if you
+prefer installing updates from public release downloads.
 
 ## Development and releases
 
