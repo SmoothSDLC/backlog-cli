@@ -105,3 +105,21 @@ repository's GitHub Actions workflow. Version 1.0.1 source is bcb6484a17de9eecc7
 
 No product decisions or delivery blockers remain. The final evidence-only commit
 does not change the tagged package contents.
+
+## Actual published artifact tested in the local agent workspace
+
+The user explicitly required local execution of the published artifact. A direct
+npm registry install was blocked by this workspace's registry authentication.
+Workflow 38991111061 instead fetched the already-published 1.0.1 tarball from
+GitHub Packages, checked its registry integrity, and attached it to the public
+GitHub release. The agent downloaded that public asset and verified its SHA-512
+against the original release record before installing it with a fresh npm cache.
+
+The entire 51-test suite ran against the installed package's code and templates
+on Linux / Node 24.19.0: 51 passed, zero failures, zero skips. Only test harness
+files came from a fresh public clone of v1.0.1. The installed executable also
+passed 27 consumer command checks; syntax, pack dry-run, skill linter, auditor,
+and self-validator passed. All 24 original installed files retained their hashes.
+Evidence and complete test output are in docs/releases/1.0.1-local-*. The
+export-published-package workflow provides this public-release download path for
+an explicitly selected already-published version, without rebuilding it.

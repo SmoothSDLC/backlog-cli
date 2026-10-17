@@ -1,0 +1,30 @@
+{
+  "ok": true,
+  "package": "@smoothsdlc/smooth-backlog-cli",
+  "version": "1.0.1",
+  "platform": "linux",
+  "node": "24.19.0",
+  "commands": 27,
+  "installed_agents": 4,
+  "source": "Actual GitHub Packages tarball downloaded from public GitHub release",
+  "registry_export_workflow": "https://github.com/SmoothSDLC/backlog-cli/actions/runs/38991111061",
+  "download_url": "https://github.com/SmoothSDLC/backlog-cli/releases/download/v1.0.1/smoothsdlc-smooth-backlog-cli-1.0.1.tgz",
+  "integrity": "sha512-eoH5EFFSSqCK8Raf7qkQXAKtup6B7BNgQWJHVeTsWj4r7FesHVIlTwlAiTEigmZIGW33B9C3WDXJ92HF0Tuc6g==",
+  "full_suite": {
+    "tests": 51,
+    "passed": 51,
+    "failed": 0,
+    "skipped": 0
+  },
+  "product_files_verified_unchanged": 24,
+  "checks": [
+    "npm test",
+    "npm run check",
+    "npm pack --dry-run",
+    "skill-lint",
+    "skill-audit",
+    "skill self-validation",
+    "installed CLI consumer checks"
+  ],
+  "test_source_commit": "bcb6484a17de9eecc7f8e5ab51a133cb55f8ecdf"
+}

@@ -1,0 +1,4 @@
+rules: 94  skills: 1
+cells PASS=81 FAIL=0 NA=13 REVIEW=0
+accounted: 94/94 (FAIL counts as accounted-but-blocking)  UNACCOUNTED=0
+skills with >=1 FAIL: 0   skills with >=1 REVIEW: 0   skills with >=1 UNACCOUNTED: 0
