@@ -8,13 +8,18 @@ The npm package is **`@smoothsdlc/smooth-backlog-cli`**; its command is **`backl
 
 ## Install and use
 
-Configure the GitHub Packages registry and package-read authentication, then install:
+Install **1.0.1** directly from this public repository's release asset. No GitHub
+login or package-registry token is required:
 
 ```sh
-npm config set @smoothsdlc:registry https://npm.pkg.github.com
-npm login --scope=@smoothsdlc --auth-type=legacy --registry=https://npm.pkg.github.com
-npm install --global @smoothsdlc/smooth-backlog-cli
+npm install --global https://github.com/SmoothSDLC/backlog-cli/releases/download/v1.0.1/smoothsdlc-smooth-backlog-cli-1.0.1.tgz
+backlog --version
 ```
+
+The release asset is the exact tarball downloaded from GitHub Packages after
+publication, with its SHA-512 integrity verified. See the
+[latest release](https://github.com/SmoothSDLC/backlog-cli/releases/latest) for
+downloads and release notes.
 
 From a Git working tree:
 
@@ -50,6 +55,22 @@ auto installs, and `backlog update disable` to disable weekly notices. Settings
 are user-scoped. Automatic updates require a writable global/user-prefix install;
 repository-local dependencies receive normal npm update instructions.
 
+### GitHub Packages and updates
+
+The repository and release download are public. GitHub's npm registry requires
+authentication even for public packages. To install by package name or use the
+built-in update checks and automatic updates, configure the registry:
+
+```sh
+npm config set @smoothsdlc:registry https://npm.pkg.github.com
+npm login --scope=@smoothsdlc --auth-type=legacy --registry=https://npm.pkg.github.com
+npm install --global @smoothsdlc/smooth-backlog-cli
+```
+
+When npm login asks for a password, use a GitHub personal access token (classic)
+with `read:packages`. To keep installing updates from public release assets
+instead, use `backlog update disable` to turn off weekly registry checks.
+
 ## Development and releases
 
 No product dependencies or build step are needed:
@@ -74,7 +95,16 @@ through the real feed and verifies permanent item identity and skill refresh.
 Each platform uploads its verification result.
 The [1.0.1 release evidence](docs/releases/1.0.1-verification.json) records the
 successful registry installations, upgrades, artifact integrity, and job links.
+The actual published tarball was also downloaded through the public release and
+installed in the local agent workspace: **all 51 tests passed with zero failures
+or skips**, plus 27 installed-CLI checks and generated-skill validation. All 24
+original installed files retained their hashes. See the
+[local verification evidence](docs/releases/1.0.1-local-verification.json) and
+[full test output](docs/releases/1.0.1-local-tests.log).
 Version tags and manual dispatch trigger releases using the repository token.
+The `Export published package to public release` workflow downloads an existing
+published version, verifies its registry integrity, and attaches the tarball to
+its GitHub release without rebuilding it.
 To independently verify an accessible published version, configure package-read
 authentication and run `node scripts/verify-published-package.mjs 1.0.1`.
 
