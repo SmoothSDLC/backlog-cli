@@ -4,13 +4,29 @@ on:
     branches: [main]
 concurrency:
   group: publish-main
-  queue: max
+  queue: single
   cancel-in-progress: false
 permissions:
   contents: read
   packages: write
 jobs:
+  merged-pr:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Require a merged pull request with successful CI
+        run: node .agents/scripts/verify-release-pr.mjs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   validate:
+    needs: merged-pr
     uses: ./.github/workflows/ci.yml
   publish:
     needs: validate
