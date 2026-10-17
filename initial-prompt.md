@@ -1,3 +1,9 @@
+> Requirements update: the user's answers to decisions 1–30 are consolidated in
+> [the revised product specification](docs/superpowers/specs/2026-10-16-backlog-cli-design.md).
+> Those answers supersede conflicting provisional choices below. The original
+> prompt and earlier proposals are retained here for provenance, not as competing
+> implementation requirements. Follow-up choices are resolved in the revised spec.
+
 create a npm package: backlog-cli
 backlog command Options:
  --help

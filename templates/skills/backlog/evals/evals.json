@@ -1,0 +1,35 @@
+{
+  "skill_name": "backlog",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Complete the next backlog item after recording passing tests.",
+      "expected_output": "Select the current active record, retain its GUID, record concrete evidence, then complete that GUID and verify the next item.",
+      "assertions": [
+        "The selected item GUID is used for completion.",
+        "Evidence is recorded before the done command.",
+        "The final list has contiguous active priorities starting at zero."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Inspect done work from feature while currently on main.",
+      "expected_output": "Use list done --branch feature --json; show GUIDs and completion dates without modifying either branch.",
+      "assertions": [
+        "Only read commands are issued.",
+        "The branch argument selects feature for the list.",
+        "Done rows include permanent GUIDs."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Reset generated backlog skills while retaining backlog data.",
+      "expected_output": "Plan init backup, verify its data-preserving effect, run it, confirm records survive, and remind the user to commit.",
+      "assertions": [
+        "The command is init backup rather than init clean.",
+        "A backup destination is reported.",
+        "The manifest records retain their GUIDs."
+      ]
+    }
+  ]
+}

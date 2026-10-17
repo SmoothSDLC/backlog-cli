@@ -1,0 +1,75 @@
+name: Publish and verify GitHub package
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+concurrency:
+  group: publish-${{ github.ref }}
+  cancel-in-progress: false
+permissions:
+  contents: read
+  packages: write
+jobs:
+  validate:
+    uses: ./.github/workflows/ci.yml
+  publish:
+    needs: validate
+    runs-on: ubuntu-latest
+    environment: github-packages
+    outputs:
+      version: ${{ steps.package.outputs.version }}
+      integrity: ${{ steps.package.outputs.integrity }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          registry-url: https://npm.pkg.github.com
+          scope: '@smoothsdlc'
+      - name: Verify version tag
+        if: startsWith(github.ref, 'refs/tags/')
+        run: node -e 'if (process.env.GITHUB_REF_NAME !== "v" + require("./package.json").version) process.exit(1)'
+      - run: npm ci --ignore-scripts
+      - name: Pack the release artifact
+        id: package
+        run: |
+          npm pack --json > "$RUNNER_TEMP/backlog-package.json"
+          node <<'JS'
+          const fs = require('node:fs');
+          const [pkg] = JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP + '/backlog-package.json', 'utf8'));
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `version=${pkg.version}\nfilename=${pkg.filename}\nintegrity=${pkg.integrity}\n`);
+          JS
+      - name: Publish the tested tarball
+        run: npm publish "$PACKAGE_FILE" --ignore-scripts --registry=https://npm.pkg.github.com
+        env:
+          PACKAGE_FILE: ${{ steps.package.outputs.filename }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  verify-published-package:
+    needs: publish
+    permissions:
+      contents: read
+      packages: read
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        node: [24, 26]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          registry-url: https://npm.pkg.github.com
+          scope: '@smoothsdlc'
+      - name: Install from GitHub Packages and exercise the installed CLI
+        run: node scripts/verify-published-package.mjs
+        env:
+          RELEASE_VERSION: ${{ needs.publish.outputs.version }}
+          RELEASE_INTEGRITY: ${{ needs.publish.outputs.integrity }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BACKLOG_RELEASE_RESULT: ${{ runner.temp }}/backlog-published-result.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: published-package-${{ matrix.os }}-node${{ matrix.node }}
+          path: ${{ runner.temp }}/backlog-published-result.json

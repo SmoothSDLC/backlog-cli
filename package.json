@@ -1,0 +1,38 @@
+{
+  "name": "@smoothsdlc/smooth-backlog-cli",
+  "version": "1.0.0",
+  "description": "A Git-aware, branch-specific backlog for people and coding agents",
+  "type": "module",
+  "bin": {
+    "backlog": "bin/backlog.js"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "license": "Apache-2.0",
+  "author": "SmoothSDLC Systems Inc (https://SmoothSDLC.com)",
+  "homepage": "https://github.com/SmoothSDLC/backlog-cli#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SmoothSDLC/backlog-cli.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "templates/",
+    "docs/commands.md",
+    "LICENSE",
+    "NOTICE",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "check": "node --check bin/backlog.js",
+    "prepublishOnly": "npm test && npm run check"
+  },
+  "backlogSchemaVersion": 1,
+  "backlogRuntimeVersion": 1
+}

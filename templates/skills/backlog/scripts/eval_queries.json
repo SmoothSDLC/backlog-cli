@@ -1,0 +1,82 @@
+[
+  {
+    "query": "What should I work on next in this repository?",
+    "should_trigger": true
+  },
+  {
+    "query": "Create a backlog item for the login fix with acceptance criteria.",
+    "should_trigger": true
+  },
+  {
+    "query": "Move the current backlog task to the end of its tasks list.",
+    "should_trigger": true
+  },
+  {
+    "query": "Record the test output as evidence for our current work.",
+    "should_trigger": true
+  },
+  {
+    "query": "Mark this repository backlog item done after verifying the outcome.",
+    "should_trigger": true
+  },
+  {
+    "query": "List completed backlog work and its GUIDs.",
+    "should_trigger": true
+  },
+  {
+    "query": "Import stored backlog items from the release branch into this branch.",
+    "should_trigger": true
+  },
+  {
+    "query": "Reopen our completed backlog item and prioritize it first.",
+    "should_trigger": true
+  },
+  {
+    "query": "Add a verifiable task goal to the next backlog item.",
+    "should_trigger": true
+  },
+  {
+    "query": "Archive done items for the current backlog branch.",
+    "should_trigger": true
+  },
+  {
+    "query": "Build a new backlog dashboard connected to Jira.",
+    "should_trigger": false
+  },
+  {
+    "query": "Delete stale Git branches after their pull requests merge.",
+    "should_trigger": false
+  },
+  {
+    "query": "Explain what a product backlog is without changing this repository.",
+    "should_trigger": false
+  },
+  {
+    "query": "Update a Linear backlog ticket in our remote organization.",
+    "should_trigger": false
+  },
+  {
+    "query": "Write a SQL migration to archive application users.",
+    "should_trigger": false
+  },
+  {
+    "query": "Change the taskbar priority of a Windows process.",
+    "should_trigger": false
+  },
+  {
+    "query": "Create a calendar task for next Monday.",
+    "should_trigger": false
+  },
+  {
+    "query": "Recover an archived Slack conversation.",
+    "should_trigger": false
+  },
+  {
+    "query": "Reorder a JavaScript array in application source code.",
+    "should_trigger": false
+  },
+  {
+    "query": "Clean build artifacts without touching project planning data.",
+    "should_trigger": false
+  }
+]
