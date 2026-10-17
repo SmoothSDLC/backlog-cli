@@ -1,15 +1,15 @@
 # smooth-backlog-cli
 
-A Git-aware, branch-specific backlog for people and coding agents by
-[SmoothSDLC Systems Inc](https://SmoothSDLC.com), licensed under [Apache 2.0](LICENSE).
+Keep a backlog of tasks, priorities, progress, and evidence alongside your code.
+Each Git branch has its own work list, shared by people and coding agents through
+version-controlled files in `.backlog/`.
 
 Requires **Node.js 24+**, npm, and Git. Supports Linux, macOS, and Windows.
-The npm package is **`@smoothsdlc/smooth-backlog-cli`**; its command is **`backlog`**.
+The package is **`@smoothsdlc/smooth-backlog-cli`**; the command is **`backlog`**.
 
-## Install and use
+## Install
 
-Install **`@smoothsdlc/smooth-backlog-cli`** by package name from GitHub Packages.
-Configure the scope's registry once, authenticate, and install:
+Configure GitHub Packages, authenticate, and install by package name:
 
 ```sh
 npm config set @smoothsdlc:registry https://npm.pkg.github.com
@@ -18,13 +18,22 @@ npm install --global @smoothsdlc/smooth-backlog-cli --registry=https://npm.pkg.g
 backlog --version
 ```
 
-GitHub's npm registry requires authentication even for public packages. When npm
-login asks for a password, use a GitHub personal access token (classic) with
-`read:packages`. The registry setup also enables built-in update checks and
-automatic updates. For installation without GitHub login, see the
-[public release download alternative](#alternative-public-release-download).
+GitHub Packages requires authentication even for public packages. When npm login
+asks for a password, use a GitHub personal access token (classic) with
+`read:packages`.
 
-From a Git working tree:
+To install without GitHub login, use the public **1.0.1** release download:
+
+```sh
+npm install --global https://github.com/SmoothSDLC/smooth-backlog-cli/releases/download/v1.0.1/smoothsdlc-smooth-backlog-cli-1.0.1.tgz
+```
+
+Built-in update checks still require the registry configuration and authentication
+above. [Release notes and downloads](https://github.com/SmoothSDLC/smooth-backlog-cli/releases/latest).
+
+## Get started
+
+Run these commands inside your Git working tree:
 
 ```sh
 backlog init
@@ -35,10 +44,38 @@ backlog 0 done
 backlog list done --json
 ```
 
+Use `backlog new --ask` for interactive item creation. Run `backlog` with no
+arguments to see the next active item.
+
+## Working with your backlog
+
+- **Priorities:** active items start at priority `0`. Numeric selectors refer to
+  the item's current priority, which can change as work is reordered or completed.
+  Each item also has a permanent GUID for durable references. List-entry positions
+  inside tasks and other lists start at `1`.
+- **States:** items are `new`, `open`, `done`, or `archived`. Completing an item
+  removes its active priority; reopening completed work puts it at priority `0`.
+  Done and archive lists show GUIDs and dates, with the newest events first.
+- **Branches:** commands use the checked-out branch. Use `list --branch` to inspect
+  another branch, `move` to transfer one item, or `import --branch` to merge its
+  unarchived work into the current branch. New and moved items append by default.
+- **Editing:** both `backlog set 0 name "Fix login"` and
+  `backlog 0 set name "Fix login"` work. List `set` and `add` append entries;
+  `replace` replaces a list, and `remove` deletes an entry. `--force` is available
+  only for whole-list replacement with `set`.
+- **Agents and Git:** initialization installs backlog skills into detected
+  `.agents`, `.claude`, `.github`, and `.qwen` folders, plus `.backlog/skills`.
+  Commit your backlog data and generated skills to share them. Preserve custom
+  skill edits through Git because initialization and updates can replace them.
+
+If the backlog already exists, `backlog init backup` preserves its data and
+backs up existing files before replacing the generated skills. **`backlog init
+clean` deletes the entire backlog, including every branch and contained backups.**
+
 ## Command help
 
-Run `backlog --help` to see the available commands and options. Output from the
-published **1.0.1** package:
+Run `backlog --help` for commands and options. Help from the published **1.0.1**
+package:
 
 ```text
 backlog — branch-specific work for people and agents
@@ -76,83 +113,29 @@ Branch fallback: --branch or BACKLOG_CLI_BRANCH when Git cannot name a branch.
 JSON emits {ok,data} or {ok,error}. Exit codes: 0 success, 2 invalid input, 1 failure.
 ```
 
-A numeric selector means the current active priority, starting at 0. Every item
-also has a permanent GUID for durable references, including completed work.
-Task/list-entry positions start at 1. Both `backlog set 0 ...` and
-`backlog 0 set ...` work. States are `new`, `open`, `done`, and `archived`.
+See the [full command reference](docs/commands.md) for field formats, examples,
+branch transfers, JSON output, storage recovery, and update settings.
 
-`init` installs backlog skills into detected `.agents`, `.claude`, `.github`, and
-`.qwen` vendor folders. It always creates the base skill under `.backlog/skills`.
-Data and skills are intended for Git; initialization reminds you to commit.
-Repeated init requires `init backup` to retain data or **`init clean` to erase the
-entire backlog, including every branch and contained backups**. Generated skill
-edits are replaceable; preserve them through Git.
+## Updates
 
-Read the [full command reference](docs/commands.md) for list operations, priorities,
-branch isolation/transfers, archive ordering, interactive input, JSON output,
-transaction recovery, and update policies. `--force` is only a whole-list `set`
-replacement option. Archive and init do not accept it.
-
-Weekly update notices default on; automatic installs default off. Use
-`backlog update auto` for daily compatible updates, `backlog update off` to stop
-auto installs, and `backlog update disable` to disable weekly notices. Settings
-are user-scoped. Automatic updates require a writable global/user-prefix install;
-repository-local dependencies receive normal npm update instructions.
-
-### Alternative: public release download
-
-Install **1.0.1** from this public repository's release asset without GitHub login
-or a package-registry token:
+Weekly update notices are enabled by default; automatic installation is disabled.
+Settings apply to your user account:
 
 ```sh
-npm install --global https://github.com/SmoothSDLC/smooth-backlog-cli/releases/download/v1.0.1/smoothsdlc-smooth-backlog-cli-1.0.1.tgz
+backlog update check     # Check now and enable weekly notices
+backlog update auto      # Enable daily automatic patch/minor updates
+backlog update off       # Disable automatic installation
+backlog update disable   # Disable weekly notices
+backlog update           # Install the latest stable release, including a new major
 ```
 
-The release asset is the exact tarball downloaded from GitHub Packages after
-publication, with its SHA-512 integrity verified. See the
-[latest release](https://github.com/SmoothSDLC/smooth-backlog-cli/releases/latest) for
-downloads and release notes. Built-in updates still require the registry setup
-above. Use `backlog update disable` to turn off weekly registry checks if you
-prefer installing updates from public release downloads.
+Automatic updates require a writable npm global or user-prefix installation.
+New major versions require an explicit `backlog update`. Failed automatic checks
+leave backlog commands usable and become eligible to retry after one hour.
+To stop all automatic update checks, run both `backlog update off` and
+`backlog update disable`. You can install later versions from public release
+assets if you prefer not to configure GitHub Packages access.
 
-## Development and releases
+## License
 
-No product dependencies or build step are needed:
-
-```sh
-npm test
-npm run check
-node bin/backlog.js --help
-npm pack --dry-run
-```
-
-Tests create temporary Git repositories and use controlled registry fixtures.
-CI runs Node 24/26 across Linux, macOS, and Windows, plus generated-skill checks.
-Updater-compatible releases retain the package.json schema/bootstrap markers
-and stable bin launcher; see the release contract in the command reference.
-The release workflow runs the reusable CI matrix before publishing the exact
-packed tarball to GitHub Packages. It then installs that exact version using a
-fresh npm cache on Linux, macOS, and Windows with Node 24/26, checks the registry
-integrity against the published artifact, and exercises the downloaded CLI and
-its four generated integrations. It also upgrades the published 1.0.0 baseline
-through the real feed and verifies permanent item identity and skill refresh.
-Each platform uploads its verification result.
-The [1.0.1 release evidence](docs/releases/1.0.1-verification.json) records the
-successful registry installations, upgrades, artifact integrity, and job links.
-The actual published tarball was also downloaded through the public release and
-installed in the local agent workspace: **all 51 tests passed with zero failures
-or skips**, plus 27 installed-CLI checks and generated-skill validation. All 24
-original installed files retained their hashes. See the
-[local verification evidence](docs/releases/1.0.1-local-verification.json) and
-[full test output](docs/releases/1.0.1-local-tests.log).
-Version tags and manual dispatch trigger releases using the repository token.
-The `Export published package to public release` workflow downloads an existing
-published version, verifies its registry integrity, and attaches the tarball to
-its GitHub release without rebuilding it.
-To independently verify an accessible published version, configure package-read
-authentication and run `node scripts/verify-published-package.mjs 1.0.1`.
-
-[The product specification](docs/superpowers/specs/2026-10-16-smooth-backlog-cli-design.md)
-records the requirements and product decisions. See [AGENTS.md](AGENTS.md) and
-[cloud setup](docs/codex-cloud-setup.md) for the repository development skills and
-code graph tooling. Third-party development tools retain MIT licenses; see [NOTICE](NOTICE).
+[Apache License 2.0](LICENSE), by [SmoothSDLC Systems Inc](https://SmoothSDLC.com).
