@@ -43,7 +43,7 @@ committing, checkout, merge, pull, push, or branch creation is part of the CLI.
 | 20 | Import transfers all unarchived source items, including done. Move transfers one item. Set cannot edit branch. |
 | 21 | Stored branch names survive Git rename/deletion. Add list branch with item counts. |
 | 22 | GitHub Packages; package basename smooth-backlog-cli. |
-| 23 | Source repository is SmoothSDLC/backlog-cli. |
+| 23 | Source repository is SmoothSDLC/smooth-backlog-cli. |
 | 24 | Node 24+; Linux, macOS, and Windows. |
 | 25 | Codex, Claude Code, GitHub Copilot, and Qwen Code. |
 | 26, 29 | Updates refresh package and installed backlog integrations. Detect installation and permissions when auto is enabled or an update requires it; never elevate privileges. |
@@ -251,7 +251,7 @@ All automatic update scheduling belongs to CLI execution, not skill activation.
 
 Interpretation of the selected package basename plus GitHub organization:
 `@smoothsdlc/smooth-backlog-cli`, executable `backlog`, source
-https://github.com/SmoothSDLC/backlog-cli. GitHub Packages requires a scope; do
+https://github.com/SmoothSDLC/smooth-backlog-cli. GitHub Packages requires a scope; do
 not publish an unscoped package there. Include a GitHub Packages publishing
 workflow and exact scope-registry setup instructions. Never automatically edit
 npm registry/auth configuration or include credentials in generated files.

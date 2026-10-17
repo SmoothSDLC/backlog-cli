@@ -3,13 +3,13 @@
   "version": "1.0.0",
   "tag": "v1.0.0",
   "source_commit": "6a8127b0abf8a34d682c84cb14cea7fed96ed4f3",
-  "workflow": "https://github.com/SmoothSDLC/backlog-cli/actions/runs/38990025987",
+  "workflow": "https://github.com/SmoothSDLC/smooth-backlog-cli/actions/runs/38990025987",
   "workflow_conclusion": "success",
-  "ci": "https://github.com/SmoothSDLC/backlog-cli/actions/runs/38989883953",
+  "ci": "https://github.com/SmoothSDLC/smooth-backlog-cli/actions/runs/38989883953",
   "verification": [
     {
       "name": "Linux / Node 24",
-      "job_url": "https://github.com/SmoothSDLC/backlog-cli/actions/runs/38990025987/job/117270471874",
+      "job_url": "https://github.com/SmoothSDLC/smooth-backlog-cli/actions/runs/38990025987/job/117270471874",
       "ok": true,
       "package": "@smoothsdlc/smooth-backlog-cli",
       "version": "1.0.0",
@@ -23,7 +23,7 @@
     },
     {
       "name": "Linux / Node 26",
-      "job_url": "https://github.com/SmoothSDLC/backlog-cli/actions/runs/38990025987/job/117270471906",
+      "job_url": "https://github.com/SmoothSDLC/smooth-backlog-cli/actions/runs/38990025987/job/117270471906",
       "ok": true,
       "package": "@smoothsdlc/smooth-backlog-cli",
       "version": "1.0.0",
@@ -37,7 +37,7 @@
     },
     {
       "name": "macOS / Node 24",
-      "job_url": "https://github.com/SmoothSDLC/backlog-cli/actions/runs/38990025987/job/117270471899",
+      "job_url": "https://github.com/SmoothSDLC/smooth-backlog-cli/actions/runs/38990025987/job/117270471899",
       "ok": true,
       "package": "@smoothsdlc/smooth-backlog-cli",
       "version": "1.0.0",
@@ -51,7 +51,7 @@
     },
     {
       "name": "macOS / Node 26",
-      "job_url": "https://github.com/SmoothSDLC/backlog-cli/actions/runs/38990025987/job/117270471885",
+      "job_url": "https://github.com/SmoothSDLC/smooth-backlog-cli/actions/runs/38990025987/job/117270471885",
       "ok": true,
       "package": "@smoothsdlc/smooth-backlog-cli",
       "version": "1.0.0",
@@ -65,7 +65,7 @@
     },
     {
       "name": "Windows / Node 24",
-      "job_url": "https://github.com/SmoothSDLC/backlog-cli/actions/runs/38990025987/job/117270471767",
+      "job_url": "https://github.com/SmoothSDLC/smooth-backlog-cli/actions/runs/38990025987/job/117270471767",
       "ok": true,
       "package": "@smoothsdlc/smooth-backlog-cli",
       "version": "1.0.0",
@@ -79,7 +79,7 @@
     },
     {
       "name": "Windows / Node 26",
-      "job_url": "https://github.com/SmoothSDLC/backlog-cli/actions/runs/38990025987/job/117270471846",
+      "job_url": "https://github.com/SmoothSDLC/smooth-backlog-cli/actions/runs/38990025987/job/117270471846",
       "ok": true,
       "package": "@smoothsdlc/smooth-backlog-cli",
       "version": "1.0.0",

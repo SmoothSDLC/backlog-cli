@@ -10,7 +10,7 @@ compatibility: Requires Node.js 24+, Git, and the backlog executable. Optional s
 metadata:
   team: SmoothSDLC
   version: "1.0.0"
-  source: "https://github.com/SmoothSDLC/backlog-cli"
+  source: "https://github.com/SmoothSDLC/smooth-backlog-cli"
 ---
 
 # Repository backlog

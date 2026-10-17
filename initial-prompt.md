@@ -178,7 +178,7 @@ selected options will take precedence when that text is revised.
     Confirm name availability/ownership separately; neither option establishes it.
 
 23. **Source repository mismatch:** the prompt names `SmoothSDLC/backup-cli` once.
-    - **23a:** Correct it to `SmoothSDLC/backlog-cli`, the current repository.
+    - **23a:** Correct it to `SmoothSDLC/smooth-backlog-cli`, the current repository.
     - **23b:** Keep `SmoothSDLC/backup-cli` as an intentional separate release source; explain the relationship.
 
 24. **Consumer runtime/platform support:** development Node 24 does not define compatibility.
@@ -388,7 +388,7 @@ delete, general branch-edit, or cross-repository import command is included.
 
 ## Distribution and updates
 
-- Confirm `SmoothSDLC/backlog-cli` as the source; the original `backup-cli` appears
+- Confirm `SmoothSDLC/smooth-backlog-cli` as the source; the original `backup-cli` appears
   to be a typo. GitHub Packages is requested, but npm packages there require a
   scoped name. The executable can remain `backlog` independently of package name.
 - Updates are off by default. Preferences are repository-scoped and apply on

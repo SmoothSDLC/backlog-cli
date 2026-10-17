@@ -11,10 +11,10 @@
   },
   "license": "Apache-2.0",
   "author": "SmoothSDLC Systems Inc (https://SmoothSDLC.com)",
-  "homepage": "https://github.com/SmoothSDLC/backlog-cli#readme",
+  "homepage": "https://github.com/SmoothSDLC/smooth-backlog-cli#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SmoothSDLC/backlog-cli.git"
+    "url": "git+https://github.com/SmoothSDLC/smooth-backlog-cli.git"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"

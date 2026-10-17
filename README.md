@@ -105,12 +105,12 @@ Install **1.0.1** from this public repository's release asset without GitHub log
 or a package-registry token:
 
 ```sh
-npm install --global https://github.com/SmoothSDLC/backlog-cli/releases/download/v1.0.1/smoothsdlc-smooth-backlog-cli-1.0.1.tgz
+npm install --global https://github.com/SmoothSDLC/smooth-backlog-cli/releases/download/v1.0.1/smoothsdlc-smooth-backlog-cli-1.0.1.tgz
 ```
 
 The release asset is the exact tarball downloaded from GitHub Packages after
 publication, with its SHA-512 integrity verified. See the
-[latest release](https://github.com/SmoothSDLC/backlog-cli/releases/latest) for
+[latest release](https://github.com/SmoothSDLC/smooth-backlog-cli/releases/latest) for
 downloads and release notes. Built-in updates still require the registry setup
 above. Use `backlog update disable` to turn off weekly registry checks if you
 prefer installing updates from public release downloads.
