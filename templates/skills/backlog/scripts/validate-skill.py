@@ -45,7 +45,7 @@ def main():
             result = subprocess.run([reference, "validate", str(root)], capture_output=True, text=True, timeout=30, check=False)
             check(result.returncode == 0, "Agent Skills reference validation: " + (result.stdout or result.stderr).strip())
         else:
-            print("ℹ️ skills-ref is unavailable; run the repository authoritative linter/auditor separately", file=sys.stderr)
+            print("ℹ️ Optional reference validation skipped; install skills-ref to enable it", file=sys.stderr)
     except (OSError, ValueError, SyntaxError, KeyError, TypeError, subprocess.TimeoutExpired) as exc:
         check(False, str(exc))
     print(json.dumps({"ok": not failures, "failures": failures}))

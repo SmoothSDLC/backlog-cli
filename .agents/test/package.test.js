@@ -1,0 +1,30 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { join, resolve } from 'node:path';
+import { spawnSync } from 'node:child_process';
+import { existsSync } from 'node:fs';
+import { fixture } from './helpers.js';
+import { runNpm } from '../../src/process.js';
+test('the packed npm artifact installs offline and runs with its bundled templates', async t => {
+  const f = fixture(t); const source = resolve('.');
+  const [pack] = JSON.parse(await runNpm(['pack', '--json', '--pack-destination', f.dir], { cwd: source }));
+  assert.ok(pack.files.some(x => x.path === 'templates/skills/backlog/scripts/snapshot.py'));
+  assert.ok(pack.files.some(x => x.path === 'COMMANDS.md'));
+  assert.ok(pack.files.some(x => x.path === 'CHANGELOG.md'));
+  assert.equal(pack.files.some(x => x.path.startsWith('.agents/')), false);
+  const prefix = join(f.dir, 'install');
+  await runNpm(['install', '--global', '--prefix', prefix, '--offline', '--ignore-scripts', '--no-audit', '--no-fund', join(f.dir, pack.filename)]);
+  const modules = await runNpm(['root', '--global', '--prefix', prefix]);
+  const installed = join(modules, '@smoothsdlc/smooth-backlog-cli/bin/backlog.js');
+  const p = spawnSync(process.execPath, [installed, 'init', '--json'], { cwd: f.root, env: f.env, encoding: 'utf8' });
+  assert.equal(p.status, 0, p.stderr || p.stdout); assert.equal(JSON.parse(p.stdout).ok, true);
+  assert.ok(existsSync(join(f.root, '.backlog/skills/backlog/SKILL.md')));
+  const link = process.platform === 'win32' ? join(prefix, 'backlog.cmd') : join(prefix, 'bin/backlog'); assert.ok(existsSync(link));
+});
+test('release verification exercises the installed artifact independently of checkout product code', async t => {
+  const { verifyInstalled } = await import('../scripts/verify-published-package.mjs');
+  const f = fixture(t); const [pack] = JSON.parse(await runNpm(['pack', '--json', '--pack-destination', f.dir])); const prefix = join(f.dir, 'release');
+  await runNpm(['install', '--global', '--prefix', prefix, '--offline', '--ignore-scripts', '--no-audit', '--no-fund', join(f.dir, pack.filename)]);
+  const result = await verifyInstalled({ prefix, expectedVersion: pack.version });
+  assert.equal(result.version, pack.version); assert.equal(result.installed_agents, 4); assert.ok(result.commands >= 20); assert.equal(result.ok, true);
+});

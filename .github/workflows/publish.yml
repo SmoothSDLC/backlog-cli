@@ -63,7 +63,7 @@ jobs:
           registry-url: https://npm.pkg.github.com
           scope: '@smoothsdlc'
       - name: Install from GitHub Packages and exercise the installed CLI
-        run: node scripts/verify-published-package.mjs
+        run: node .agents/scripts/verify-published-package.mjs
         env:
           RELEASE_VERSION: ${{ needs.publish.outputs.version }}
           RELEASE_INTEGRITY: ${{ needs.publish.outputs.integrity }}

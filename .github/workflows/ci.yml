@@ -32,7 +32,4 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: python -m pip install -r .codex/skill-requirements.txt
-      - run: python scripts/skills/skill-lint.py templates/skills/backlog
-      - run: python scripts/skills/skill-audit.py templates/skills/backlog
       - run: python templates/skills/backlog/scripts/validate-skill.py

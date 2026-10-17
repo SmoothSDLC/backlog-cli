@@ -23,13 +23,14 @@
     "bin/",
     "src/",
     "templates/",
-    "docs/commands.md",
+    "COMMANDS.md",
+    "CHANGELOG.md",
     "LICENSE",
     "NOTICE",
     "README.md"
   ],
   "scripts": {
-    "test": "node --test test/*.test.js",
+    "test": "node --test .agents/test/*.test.js",
     "check": "node --check bin/backlog.js",
     "prepublishOnly": "npm test && npm run check"
   },

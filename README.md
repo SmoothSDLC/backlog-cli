@@ -113,7 +113,7 @@ Branch fallback: --branch or BACKLOG_CLI_BRANCH when Git cannot name a branch.
 JSON emits {ok,data} or {ok,error}. Exit codes: 0 success, 2 invalid input, 1 failure.
 ```
 
-See the [full command reference](docs/commands.md) for field formats, examples,
+See the [full command reference](COMMANDS.md) for field formats, examples,
 branch transfers, JSON output, storage recovery, and update settings.
 
 ## Updates
