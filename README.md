@@ -8,8 +8,7 @@ The npm package is **`@smoothsdlc/smooth-backlog-cli`**; its command is **`backl
 
 ## Install and use
 
-After a release is published to GitHub Packages, configure its registry and
-package-read authentication, then install:
+Configure the GitHub Packages registry and package-read authentication, then install:
 
 ```sh
 npm config set @smoothsdlc:registry https://npm.pkg.github.com
@@ -73,6 +72,8 @@ integrity against the published artifact, and exercises the downloaded CLI and
 its four generated integrations. It also upgrades the published 1.0.0 baseline
 through the real feed and verifies permanent item identity and skill refresh.
 Each platform uploads its verification result.
+The [1.0.1 release evidence](docs/releases/1.0.1-verification.json) records the
+successful registry installations, upgrades, artifact integrity, and job links.
 Version tags and manual dispatch trigger releases using the repository token.
 To independently verify an accessible published version, configure package-read
 authentication and run `node scripts/verify-published-package.mjs 1.0.1`.

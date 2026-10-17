@@ -84,3 +84,24 @@ A final authentication review found npm 9+ requires --auth-type=legacy for the
 GitHub Packages login command. A failing regression verified the omitted flag;
 release 1.0.1 corrects the guidance and adds real feed-based 1.0.0-to-current
 self-update verification, including GUID preservation and integration refresh.
+
+## Completed delivery (2026-10-17)
+
+This section supersedes the earlier local-only completion and verification limits.
+Implementation and release changes were committed and pushed to both work and main.
+Annotated v1.0.0 and v1.0.1 tags are pushed; both packages were published by the
+repository's GitHub Actions workflow. Version 1.0.1 source is bcb6484a17de9eecc7f8e5ab51a133cb55f8ecdf.
+
+- Local suite: 51 tests passed; syntax and diff checks passed.
+- Source CI run 38990582188 passed all six Linux/macOS/Windows and Node 24/26
+  combinations plus generated-skill validation.
+- Release run 38990685530 passed all 14 jobs: reusable CI, package publication,
+  and six consumer verification jobs using the actual GitHub Packages artifact.
+- Each consumer job passed 29 command checks on a fresh 1.0.1 installation and
+  31 checks upgrading a feed-installed 1.0.0 through backlog update auto.
+  GUID identity survived the upgrade and generated integration version refreshed.
+- Downloaded package integrity matched the exact published tarball in every job.
+- Full machine-readable evidence: docs/releases/1.0.1-verification.json.
+
+No product decisions or delivery blockers remain. The final evidence-only commit
+does not change the tagged package contents.
