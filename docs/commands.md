@@ -199,7 +199,9 @@ priority, name, branch, state, item-state-description, description, ac, tasks,
 outcomes, evidence, references, work_item_id, item_created_at, item_updated_at,
 item_completed_at, and item_archived_at. Tasks contain name/goal strings.
 
-A repository-root `.backlog-cli.lock` serializes local processes. A durable
+A repository-root `.smooth-backlog-cli.lock` serializes local processes. The CLI
+also acquires the pre-rename lock first to coordinate with older installed
+versions. A durable
 `.backlog/.transaction.json` journal recovers interrupted multi-file writes.
 Corrupt JSON, duplicate GUIDs, merge conflicts, unsupported schemas, invalid
 priorities and symlinked destinations fail explicitly instead of resetting data.

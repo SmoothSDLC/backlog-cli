@@ -1,4 +1,4 @@
-# backlog-cli
+# smooth-backlog-cli
 
 A Git-aware, branch-specific backlog for people and coding agents by
 [SmoothSDLC Systems Inc](https://SmoothSDLC.com), licensed under [Apache 2.0](LICENSE).
@@ -152,8 +152,7 @@ its GitHub release without rebuilding it.
 To independently verify an accessible published version, configure package-read
 authentication and run `node scripts/verify-published-package.mjs 1.0.1`.
 
-[initial-prompt.md](initial-prompt.md) preserves the initial requirements;
-[the revised specification](docs/superpowers/specs/2026-10-16-backlog-cli-design.md)
-records subsequent product decisions. See [AGENTS.md](AGENTS.md) and
+[The product specification](docs/superpowers/specs/2026-10-16-smooth-backlog-cli-design.md)
+records the requirements and product decisions. See [AGENTS.md](AGENTS.md) and
 [cloud setup](docs/codex-cloud-setup.md) for the repository development skills and
 code graph tooling. Third-party development tools retain MIT licenses; see [NOTICE](NOTICE).

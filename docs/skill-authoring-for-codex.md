@@ -1,4 +1,4 @@
-# Skill authoring in backlog-cli
+# Skill authoring in smooth-backlog-cli
 
 The original `.agent/skills.instructions.md` and
 `docs/agent-skills-specification-guidance.md` were copied without changes from
@@ -7,7 +7,7 @@ The original `.agent/skills.instructions.md` and
 
 Read them before building project skills. Apply these explicit adaptations:
 
-| Source convention | backlog-cli convention |
+| Source convention | smooth-backlog-cli convention |
 | --- | --- |
 | `.github/skills/<name>`, `.agent/skills/<name>`, `.claude/skills/<name>` | `.agents/skills/<name>` for Codex |
 | `license: Proprietary` | `license: Apache-2.0` for original SmoothSDLC project skills |
@@ -33,7 +33,7 @@ that a new skill was checked. Require zero linter ERRORs and zero auditor FAILs;
 also inspect REVIEW findings. The per-skill self-check is an additional gate.
 
 The 15 Superpowers and six Ponytail skills are imported development tools,
-with byte-for-byte skill copies recorded in `third_party/*/source.json`.
+with byte-for-byte skill copies recorded in `.agent/third_party/*/source.json`.
 They retain their MIT licenses and upstream conventions. Their installation
 does not certify conformance to SmoothSDLC's stricter authoring standards.
 When modifying one or creating a new project skill, apply the standards and

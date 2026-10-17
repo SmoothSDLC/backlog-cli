@@ -1,7 +1,7 @@
 import { promises as fs, readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { exists, safePath, atomicWrite, locked, dataFiles, readJSON, recover, withStore } from './storage.js';
+import { exists, safePath, atomicWrite, repositoryLocked, dataFiles, readJSON, recover, withStore } from './storage.js';
 import { operation, input } from './errors.js';
 import { validateStore } from './schema.js';
 const packageVersion = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')).version;
@@ -40,8 +40,7 @@ export async function initialize(context, args) {
   if (['clean', 'backup'].includes(rest[0])) mode = rest.shift();
   input(rest.length <= 1, 'Use init [repo-name], init clean [repo-name], or init backup [repo-name].');
   const explicitName = rest[0]; if (explicitName !== undefined) input(explicitName.trim().length > 0, 'Repository name cannot be empty.');
-  const lock = join(context.root, '.backlog-cli.lock'); await safePath(context.root, lock);
-  return locked(lock, async () => {
+  return repositoryLocked(context.root, async () => {
     const dir = join(context.root, '.backlog'); await safeTree(context.root, dir); const present = await exists(dir);
     operation(!(mode === 'new' && present), '.backlog already exists. Use backlog init clean to remove and recreate the entire backlog, or backlog init backup to back up existing files and replace skills.');
     // Preflight every generated destination before destructive initialization.
@@ -61,7 +60,7 @@ export async function initialize(context, args) {
     if (mode === 'clean' && present) await fs.rm(dir, { recursive: true });
     await fs.mkdir(dir, { recursive: true });
     if (!config) {
-      config = { owner: 'backlog-cli', schema_version: 1, repo_name: explicitName || context.name, default_branch: context.defaultBranch, generated_version: packageVersion };
+      config = { owner: 'smooth-backlog-cli', schema_version: 1, repo_name: explicitName || context.name, default_branch: context.defaultBranch, generated_version: packageVersion };
       for (const [filename, value] of [['config.json', config], ['backlog_manifest.json', []], ['backlog_archive.json', []]]) await atomicWrite(join(dir, filename), JSON.stringify(value, null, 2) + '\n');
       await atomicWrite(join(dir, 'README.md'), '# Repository backlog\n\nUse `backlog --help` for commands. Backlog data and generated skills belong in Git. Commit initialization changes. Init clean removes this entire folder, including backups.\n');
       await atomicWrite(join(dir, 'agent.instructions.md'), '# Backlog agent instructions\n\nRead skills/backlog/SKILL.md before using the backlog. Numeric selectors are current priorities; retain GUIDs for permanent references. Only list/import and an explicit move cross branch boundaries.\n');

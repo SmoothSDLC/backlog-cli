@@ -5,7 +5,7 @@
 **Goal:** Ship the complete local branch-aware backlog CLI, four agent integrations, and npm release/update support.
 **Architecture:** A dependency-free Node ESM package separates parsing/output, context, transactional storage, item operations, generated integrations, and user-level updates. CLI commands validate before locking and atomically journal repository mutations.
 **Tech Stack:** Node 24+, Git, npm, node:test, Python 3 for bundled skill helpers.
-**Spec:** docs/superpowers/specs/2026-10-16-backlog-cli-design.md
+**Spec:** docs/superpowers/specs/2026-10-16-smooth-backlog-cli-design.md
 
 ## Global Constraints
 

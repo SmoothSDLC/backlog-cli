@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Script: snapshot.py
-Requires: Python 3.8+ stdlib, Node.js 24+, installed backlog-cli; no pip packages.
+Requires: Python 3.8+ stdlib, Node.js 24+, installed smooth-backlog-cli; no pip packages.
 Purpose: Produce a validated, branch-specific snapshot and deterministic task counts.
 Idempotent: yes — read-only CLI inspection; never changes project backlog data.
 Exit codes: 0 success, 1 operational/validation failure, 2 invalid arguments.

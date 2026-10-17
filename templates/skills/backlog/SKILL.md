@@ -4,7 +4,7 @@ description: >
   Use this skill when planning, prioritizing, recording progress, or completing
   this repository's backlog work, even if the user asks what to work on next
   without naming the backlog. Manage branch-local tasks and evidence through
-  backlog-cli. It does not manage unrelated project trackers or Git branch cleanup.
+  smooth-backlog-cli. It does not manage unrelated project trackers or Git branch cleanup.
 license: Apache-2.0
 compatibility: Requires Node.js 24+, Git, and the backlog executable. Optional skill helpers require Python 3.8+.
 metadata:

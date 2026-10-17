@@ -9,7 +9,7 @@ test('the packed npm artifact installs offline and runs with its bundled templat
   const f = fixture(t); const source = resolve('.');
   const [pack] = JSON.parse(await runNpm(['pack', '--json', '--pack-destination', f.dir], { cwd: source }));
   assert.ok(pack.files.some(x => x.path === 'templates/skills/backlog/scripts/snapshot.py'));
-  assert.equal(pack.files.some(x => x.path.startsWith('test/') || x.path.startsWith('third_party/')), false);
+  assert.equal(pack.files.some(x => x.path.startsWith('test/') || x.path.startsWith('.agent/')), false);
   const prefix = join(f.dir, 'install');
   await runNpm(['install', '--global', '--prefix', prefix, '--offline', '--ignore-scripts', '--no-audit', '--no-fund', join(f.dir, pack.filename)]);
   const modules = await runNpm(['root', '--global', '--prefix', prefix]);

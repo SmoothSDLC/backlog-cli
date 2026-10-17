@@ -53,6 +53,13 @@ export async function locked(path, callback) {
   }
   try { return await callback(); } finally { await handle.close(); await fs.rm(path, { force: true }); }
 }
+export async function repositoryLocked(root, callback) {
+  const filename = '.smooth-backlog-cli.lock';
+  const lock = join(root, filename), legacyLock = join(root, filename.replace('smooth-', ''));
+  await safePath(root, lock); await safePath(root, legacyLock);
+  // Acquire the pre-rename lock first to coordinate with already-published CLIs.
+  return locked(legacyLock, () => locked(lock, callback));
+}
 export const dataFiles = { config: 'config.json', manifest: 'backlog_manifest.json', archive: 'backlog_archive.json' };
 export async function readJSON(path) {
   try { return JSON.parse(await fs.readFile(path, 'utf8')); }
@@ -68,8 +75,7 @@ export async function recover(root) {
   await fs.rm(journal);
 }
 export async function withStore(context, callback) {
-  const lock = join(context.root, '.backlog-cli.lock'); await safePath(context.root, lock);
-  return locked(lock, async () => {
+  return repositoryLocked(context.root, async () => {
     const dir = join(context.root, '.backlog'); await safePath(context.root, dir);
     operation(await exists(dir), 'Backlog is not initialized. Run backlog init.');
     await recover(context.root);

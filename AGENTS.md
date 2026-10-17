@@ -1,8 +1,9 @@
-# backlog-cli
+# smooth-backlog-cli
 
-backlog-cli is an npm CLI project by SmoothSDLC Systems Inc
-(https://SmoothSDLC.com), licensed under Apache-2.0. Read `initial-prompt.md`
-for the product requirements before implementation. Environment setup does not
+smooth-backlog-cli is an npm CLI project by SmoothSDLC Systems Inc
+(https://SmoothSDLC.com), licensed under Apache-2.0. Read
+`docs/superpowers/specs/2026-10-16-smooth-backlog-cli-design.md` for the product
+requirements before implementation. Environment setup does not
 authorize implementing the CLI or generating its product skills.
 
 ## Installed development skills
@@ -26,7 +27,7 @@ trust lifecycle hooks merely because an upstream skill describes that workflow.
 The repository installs skills without Claude hooks or home-directory state.
 Ponytail's plugin statusline, automatic mode persistence, and lifecycle hooks
 are outside this installation; session instructions provide its default mode.
-Its benchmark references are in `third_party/ponytail/benchmarks/results/`.
+Its benchmark references are in `.agent/third_party/ponytail/benchmarks/results/`.
 
 ## Code navigation
 

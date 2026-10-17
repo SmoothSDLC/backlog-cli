@@ -27,7 +27,8 @@ export function scalar(property, value) {
 }
 export function validateStore(store) {
   const { config, manifest, archive } = store;
-  operation(config && config.owner === 'backlog-cli', 'Unidentified .backlog configuration; use backlog init clean or backlog init backup.');
+  // Accept the pre-rename owner marker when reading existing repositories.
+  operation(config && [config.owner, `smooth-${config.owner}`].includes('smooth-backlog-cli'), 'Unidentified .backlog configuration; use backlog init clean or backlog init backup.');
   operation(config.schema_version === 1, `Unsupported schema version ${config.schema_version}; use a compatible CLI or supported migration.`);
   operation(typeof config.repo_name === 'string' && config.repo_name.length > 0, 'Invalid repository name in config.json.');
   operation(Array.isArray(manifest) && Array.isArray(archive), 'Manifest and archive must be JSON arrays.');

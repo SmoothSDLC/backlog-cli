@@ -37,8 +37,8 @@ supporting references were copied from BIGFAN's installed Claude plugins:
 
 | Package | Version | Provenance |
 | --- | --- | --- |
-| Superpowers | 6.4.2 | `third_party/superpowers/source.json` |
-| Ponytail | 5.2.0 | `third_party/ponytail/source.json` |
+| Superpowers | 6.4.2 | `.agent/third_party/superpowers/source.json` |
+| Ponytail | 5.2.0 | `.agent/third_party/ponytail/source.json` |
 
 The source manifests record original locations for provenance only. No runtime
 file depends on `/home/smooth` or `~/.claude`. The manifests contain SHA-256
@@ -49,7 +49,7 @@ a vendor copy. Copied skills retain their upstream wording and MIT terms.
 at session start. Skills can also be invoked as `$brainstorming`, `$ponytail`,
 or `$ponytail-review`. Claude lifecycle hooks, statusline installation, and
 home-directory mode files are not part of this skill installation. Ponytail's
-published benchmark references are preserved under `third_party/ponytail/`.
+published benchmark references are preserved under `.agent/third_party/ponytail/`.
 Skills become available to a new Codex session/turn after the repo is loaded.
 
 ## Codebase memory
@@ -63,11 +63,11 @@ Every cloud session can use the same tools through the CLI launcher:
 
 ```bash
 scripts/codebase-memory.sh --version
-scripts/codebase-memory.sh cli index_repository --repo-path "$PWD" --name backlog-cli
+scripts/codebase-memory.sh cli index_repository --repo-path "$PWD" --name smooth-backlog-cli
 scripts/codebase-memory.sh cli list_projects
 # Use the project name returned by list_projects in subsequent graph queries.
-scripts/codebase-memory.sh cli get_architecture --project backlog-cli
-scripts/codebase-memory.sh cli search_graph --project backlog-cli --query init
+scripts/codebase-memory.sh cli get_architecture --project smooth-backlog-cli
+scripts/codebase-memory.sh cli search_graph --project smooth-backlog-cli --query init
 ```
 
 Use `search_graph` for symbols, `trace_path` for relationships,

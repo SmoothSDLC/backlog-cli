@@ -10,9 +10,9 @@ branch-specific backlog items in version-controlled repository files. The
 executable is `backlog`. The producer is SmoothSDLC Systems Inc,
 https://SmoothSDLC.com, and the license is Apache-2.0.
 
-The original prompt is preserved in initial-prompt.md. The user's subsequent
-answers take precedence over its provisional clarification text. Explicit
-decisions below are distinguished from implementation interpretations and open
+This specification consolidates the initial requirements and the user's
+subsequent answers, which take precedence over provisional clarification text.
+Explicit decisions below are distinguished from implementation interpretations and open
 questions. This specification replaces the earlier proposal once those remaining
 questions have been answered; subsequent user corrections remain authoritative.
 

@@ -15,7 +15,7 @@ test('initialization detects root from subdirectory and rejects repeated init an
   const f = fixture(t); mkdirSync(join(f.root, 'nested'));
   const p = f.raw(['init', '--json'], { cwd: join(f.root, 'nested') }); assert.equal(p.status, 0, p.stdout);
   assert.deepEqual(f.json('backlog_manifest.json'), []);
-  assert.equal(f.json('config.json').owner, 'backlog-cli');
+  assert.equal(f.json('config.json').owner, 'smooth-backlog-cli');
   assert.ok(existsSync(f.file('skills/backlog/SKILL.md')));
   assert.match(p.stderr, /commit/i);
   assert.match(f.fail(['init'], 1).message, /init clean.*init backup/s);
@@ -165,4 +165,30 @@ test('import source selection does not override the destination branch supplied 
   const f = fixture(t); f.cli('init'); const item = f.create('Source'); f.git('checkout', '--detach');
   const p = f.raw(['import', '--branch', 'main', '--json'], { env: { ...f.env, BACKLOG_CLI_BRANCH: 'destination' } });
   assert.equal(p.status, 0, p.stdout); assert.equal(JSON.parse(p.stdout).data[0].id, item.id); assert.equal(JSON.parse(p.stdout).data[0].branch, 'destination');
+});
+
+test('renamed project writes the new owner marker and reads pre-rename backlog data', t => {
+  const f = fixture(t); f.cli('init'); const item = f.create('Existing work');
+  const config = f.json('config.json'); assert.equal(config.owner, 'smooth-backlog-cli');
+  config.owner = config.owner.replace(/^smooth-/, '');
+  writeFileSync(f.file('config.json'), JSON.stringify(config));
+  assert.equal(f.cli().id, item.id);
+  assert.equal(f.cli(item.id, 'done').id, item.id);
+  f.cli('init', 'backup'); assert.equal(f.cli('list', 'done')[0].id, item.id);
+});
+test('renamed repository lock retains coordination with pre-rename writers', async t => {
+  const f = fixture(t); f.cli('init');
+  const { repositoryLocked } = await import('../src/storage.js');
+  assert.equal(typeof repositoryLocked, 'function');
+  let blocked;
+  await repositoryLocked(f.root, async () => {
+    const filename = '.smooth-backlog-cli.lock';
+    assert.ok(existsSync(join(f.root, filename)));
+    assert.ok(existsSync(join(f.root, filename.replace('smooth-', ''))));
+    blocked = f.asyncCli(['new', 'Wait for lock', '--description', 'd', '--ac', 'a']);
+    let completed = false; blocked.then(() => { completed = true; });
+    await new Promise(resolve => setTimeout(resolve, 150));
+    assert.equal(completed, false);
+  });
+  assert.equal((await blocked).name, 'Wait for lock');
 });
