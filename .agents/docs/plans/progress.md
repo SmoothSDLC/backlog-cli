@@ -6,7 +6,7 @@ Plan: 2026-10-16-smooth-backlog-cli.md
 - Tasks 1–2: core tests RED→GREEN; 19/19 pass (npm test before updater tests).
 - Task 3: updater tests RED→GREEN; 28/28 total pass.
 - Task 4: agent-helper tests added and failed as expected before helper creation.
-- Context: cloud checkout /workspace/smooth-backlog-cli, branch work; implementation stays in supplied workspace. No main-branch modification or extra worktree is necessary.
+- Context: supplied cloud checkout, implementation branch; implementation stays in supplied workspace. No main-branch modification or extra worktree is necessary.
 - Ruling: newest event first for done/archive, with event timestamps and GUID tie-breaker — matches newest-first history views; users can inspect timestamps for order.
 - Ruling: init clean does not require a named branch — reset applies to the entire backlog, as explicitly clarified by the user.
 - Ruling: user-prefix/global npm installs can use staged package replacement; repository dependency installs receive npm instructions to preserve their package/lockfile ownership.
@@ -120,6 +120,6 @@ on Linux / Node 24.19.0: 51 passed, zero failures, zero skips. Only test harness
 files came from a fresh public clone of v1.0.1. The installed executable also
 passed 27 consumer command checks; syntax, pack dry-run, skill linter, auditor,
 and self-validator passed. All 24 original installed files retained their hashes.
-Evidence and complete test output are in .agents/docs/releases/1.0.1-local-*. The
-export-published-package workflow provides this public-release download path for
-an explicitly selected already-published version, without rebuilding it.
+Evidence and complete test output are in .agents/docs/releases/1.0.1-local-*. That historical download path was used for verification without rebuilding the
+package. Supported installation now uses the npm registry reference; the former
+public-tarball export workflow has been removed.

@@ -22,15 +22,6 @@ GitHub Packages requires authentication even for public packages. When npm login
 asks for a password, use a GitHub personal access token (classic) with
 `read:packages`.
 
-To install without GitHub login, use the public **1.0.1** release download:
-
-```sh
-npm install --global https://github.com/SmoothSDLC/smooth-backlog-cli/releases/download/v1.0.1/smoothsdlc-smooth-backlog-cli-1.0.1.tgz
-```
-
-Built-in update checks still require the registry configuration and authentication
-above. [Release notes and downloads](https://github.com/SmoothSDLC/smooth-backlog-cli/releases/latest).
-
 ## Get started
 
 Run these commands inside your Git working tree:
@@ -74,8 +65,7 @@ clean` deletes the entire backlog, including every branch and contained backups.
 
 ## Command help
 
-Run `backlog --help` for commands and options. Help from the published **1.0.1**
-package:
+Run `backlog --help` for the available commands and options:
 
 ```text
 backlog — branch-specific work for people and agents
@@ -133,8 +123,7 @@ Automatic updates require a writable npm global or user-prefix installation.
 New major versions require an explicit `backlog update`. Failed automatic checks
 leave backlog commands usable and become eligible to retry after one hour.
 To stop all automatic update checks, run both `backlog update off` and
-`backlog update disable`. You can install later versions from public release
-assets if you prefer not to configure GitHub Packages access.
+`backlog update disable`.
 
 ## License
 

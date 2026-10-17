@@ -6,8 +6,8 @@ are installed by `backlog init`. Keep them independent of development-only tools
 
 Use `license: Apache-2.0` for project-authored skills. Keep the skill description
 specific, preserve working relative links, and use scripts for deterministic work.
-The archived authoring references in this directory provide additional background;
-examples of external tool paths do not describe an installed repository toolchain.
+The authoring standards and validation coverage in this directory describe the
+current product integration and supported maintenance commands.
 
 Validate from the repository root:
 

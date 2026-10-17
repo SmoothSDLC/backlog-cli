@@ -54,7 +54,7 @@
 
 ### Task 4: Agent skills, distribution, documentation and review
 
-**Files:** templates/skills/backlog/**, templates/agent-types/**, README.md, COMMANDS.md, .github/workflows/{ci,publish}.yml, package-lock.json.
+**Files:** templates/skills/backlog/**, src/integrations.js, README.md, COMMANDS.md, .github/workflows/{ci,publish}.yml, package-lock.json.
 **Interfaces:** adapters expose detection/destination metadata; templates are installed unchanged into detected project-local vendor folders.
 - [x] Test installed adapters' helper behavior and npm package installation in temporary Git repositories.
 - [x] Add base skill plus real read-only JSON snapshot helper, self-validator, trigger examples and output evals. Verify vendor conventions against official docs.

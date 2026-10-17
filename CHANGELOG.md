@@ -18,5 +18,5 @@
 - Check for releases and optionally install compatible automatic updates.
 
 See [the latest release](https://github.com/SmoothSDLC/smooth-backlog-cli/releases/latest)
-for package downloads. [README.md](README.md) covers installation and
+for release notes. [README.md](README.md) covers installation and
 [COMMANDS.md](COMMANDS.md) describes the CLI.

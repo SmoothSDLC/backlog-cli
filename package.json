@@ -1,7 +1,7 @@
 {
   "name": "@smoothsdlc/smooth-backlog-cli",
   "version": "1.0.1",
-  "description": "A Git-aware, branch-specific backlog for people and coding agents",
+  "description": "Keep your backlog beside your code. Manage branch-specific work, priorities, and progress from the CLI, with built-in skills for developers and coding agents.",
   "type": "module",
   "bin": {
     "backlog": "bin/backlog.js"
