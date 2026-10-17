@@ -1,7 +1,8 @@
 name: Publish and verify GitHub package
 on:
   push:
-    branches: [main]
+    tags: ['v*']
+  workflow_dispatch:
 concurrency:
   group: publish-main
   queue: single
@@ -36,6 +37,7 @@ jobs:
       version: ${{ steps.package.outputs.version }}
       integrity: ${{ steps.package.outputs.integrity }}
       release: ${{ steps.plan.outputs.release }}
+      upgrade_from: ${{ steps.prepare.outputs.upgrade_from }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -46,7 +48,13 @@ jobs:
           registry-url: https://npm.pkg.github.com
           scope: '@smoothsdlc'
       - run: npm ci --ignore-scripts
+      - name: Read the immutable release tag
+        id: prepare
+        run: node .agents/scripts/release.mjs prepare
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Pack the release artifact
+        if: steps.prepare.outputs.release == 'true'
         id: package
         run: |
           npm pack --json > "$RUNNER_TEMP/backlog-package.json"
@@ -56,6 +64,7 @@ jobs:
           fs.appendFileSync(process.env.GITHUB_OUTPUT, `version=${pkg.version}\nfilename=${pkg.filename}\nintegrity=${pkg.integrity}\n`);
           JS
       - name: Plan an immutable package release
+        if: steps.prepare.outputs.release == 'true'
         id: plan
         run: node .agents/scripts/release.mjs plan
         env:
@@ -93,26 +102,9 @@ jobs:
           RELEASE_VERSION: ${{ needs.publish.outputs.version }}
           RELEASE_INTEGRITY: ${{ needs.publish.outputs.integrity }}
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BACKLOG_UPGRADE_FROM: 1.0.0
+          BACKLOG_UPGRADE_FROM: ${{ needs.publish.outputs.upgrade_from }}
           BACKLOG_RELEASE_RESULT: ${{ runner.temp }}/backlog-published-result.json
       - uses: actions/upload-artifact@v4
         with:
           name: published-package-${{ matrix.os }}-node${{ matrix.node }}
           path: ${{ runner.temp }}/backlog-published-result.json
-  tag-release:
-    needs: [publish, verify-published-package]
-    if: needs.publish.outputs.release == 'true'
-    permissions:
-      contents: write
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-      - name: Tag the verified release commit
-        run: node .agents/scripts/release.mjs tag
-        env:
-          RELEASE_VERSION: ${{ needs.publish.outputs.version }}

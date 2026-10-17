@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.2
+## Unreleased
 
 - Fix intermittent permission errors when concurrent commands acquire locks on Windows.
 - Preserve existing backlog data and lock coordination after the project rename.
