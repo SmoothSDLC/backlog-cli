@@ -1,10 +1,9 @@
 name: Publish and verify GitHub package
 on:
   push:
-    tags: ['v*']
-  workflow_dispatch:
+    branches: [main]
 concurrency:
-  group: publish-${{ github.ref }}
+  group: publish-main
   cancel-in-progress: false
 permissions:
   contents: read
@@ -19,16 +18,16 @@ jobs:
     outputs:
       version: ${{ steps.package.outputs.version }}
       integrity: ${{ steps.package.outputs.integrity }}
+      release: ${{ steps.plan.outputs.release }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
           registry-url: https://npm.pkg.github.com
           scope: '@smoothsdlc'
-      - name: Verify version tag
-        if: startsWith(github.ref, 'refs/tags/')
-        run: node -e 'if (process.env.GITHUB_REF_NAME !== "v" + require("./package.json").version) process.exit(1)'
       - run: npm ci --ignore-scripts
       - name: Pack the release artifact
         id: package
@@ -39,13 +38,22 @@ jobs:
           const [pkg] = JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP + '/backlog-package.json', 'utf8'));
           fs.appendFileSync(process.env.GITHUB_OUTPUT, `version=${pkg.version}\nfilename=${pkg.filename}\nintegrity=${pkg.integrity}\n`);
           JS
+      - name: Plan an immutable package release
+        id: plan
+        run: node .agents/scripts/release.mjs plan
+        env:
+          RELEASE_VERSION: ${{ steps.package.outputs.version }}
+          RELEASE_INTEGRITY: ${{ steps.package.outputs.integrity }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish the tested tarball
+        if: steps.plan.outputs.publish == 'true'
         run: npm publish "$PACKAGE_FILE" --ignore-scripts --registry=https://npm.pkg.github.com
         env:
           PACKAGE_FILE: ${{ steps.package.outputs.filename }}
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   verify-published-package:
     needs: publish
+    if: needs.publish.outputs.release == 'true'
     permissions:
       contents: read
       packages: read
@@ -74,3 +82,20 @@ jobs:
         with:
           name: published-package-${{ matrix.os }}-node${{ matrix.node }}
           path: ${{ runner.temp }}/backlog-published-result.json
+  tag-release:
+    needs: [publish, verify-published-package]
+    if: needs.publish.outputs.release == 'true'
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Tag the verified release commit
+        run: node .agents/scripts/release.mjs tag
+        env:
+          RELEASE_VERSION: ${{ needs.publish.outputs.version }}
